@@ -6,18 +6,14 @@
       "use": "@vercel/static"
     },
     {
-      "src": "*.{png,jpg,jpeg,gif,webp}",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "dog images/*.{png,jpg,jpeg,gif,webp}",
+      "src": "public/**/*",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/dog images/(.*)",
-      "dest": "/dog images/$1"
+      "src": "/images/(.*)",
+      "dest": "/public/images/$1"
     },
     {
       "src": "/(.*)",
