@@ -67,7 +67,7 @@
             left: 0;
             width: 100%;
             height: 3360px;
-            background-image: url('bg.webp');
+            background-image: url('/images/bg.webp');
             background-size: cover;
             background-position: top center;
             will-change: transform;
@@ -75,7 +75,7 @@
 
         /* Remove the success state background switch */
         .hero-bg.success {
-            background-image: url('bg.webp');
+            background-image: url('/images/bg.webp');
         }
 
         /* Add a spacer to prevent content jump when hero becomes fixed */
@@ -723,11 +723,6 @@
             opacity: 1;
         }
 
-        .composer-component.completion-state > * {
-            position: relative;
-            z-index: 3;
-        }
-
         .composer-component.completion-state::after {
             content: '';
             position: absolute;
@@ -735,7 +730,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('present.webp');
+            background: url('/images/present.webp');
             background-size: cover;
             background-position: center;
             opacity: 0;
@@ -746,7 +741,7 @@
         }
 
         .composer-component.completion-state.show-bg::after {
-            opacity: 0.7;
+            opacity: 0.4;
         }
 
         .composer-component.completion-state .composer-right {
@@ -800,58 +795,22 @@
         }
 
         .rectangle-vertical {
-            width: 200px;
-            height: 400px;
+            width: 400px;
+            height: 800px;
             background: #fff;
             border: 4px solid #000;
-            border-radius: 12px;
-            opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .rectangle-horizontal {
-            width: 550px;
-            height: 360px;
-            background: #fff;
-            border: 4px solid #000;
-            border-radius: 12px;
+            border-radius: 24px;
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-top: 30px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .rectangle-horizontal::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 28px;
-            background: #f0f0f0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .rectangle-vertical.slide-in {
             opacity: 1;
-            transform: translateX(0);
-        }
-
-        .rectangle-vertical.slide-up {
-            transform: translateY(-20px);
-        }
-
-        .rectangle-horizontal.visible {
-            opacity: 1;
             transform: translateY(0);
         }
 
-        /* Animated text styles */
         .animated-text {
             position: relative;
             color: #fff;
@@ -919,7 +878,7 @@
         }
 
         .dim-overlay.visible {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.85);
         }
 
         /* Add step text styles */
@@ -934,42 +893,6 @@
         .step-text.hidden {
             opacity: 0;
         }
-
-        .composer-component.completion-state .cursor-logo {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 96px;
-            height: 96px;
-            opacity: 0.8;
-            transition: opacity 0.2s ease;
-            z-index: 2;
-        }
-
-        .composer-component.completion-state .cursor-logo:hover {
-            opacity: 1;
-        }
-
-        .composer-component.completion-state .window-controls {
-            display: flex;
-            gap: 8px;
-            padding: 8px;
-            position: absolute;
-            top: 6px;
-            left: 8px;
-            z-index: 10;
-        }
-
-        .composer-component.completion-state .window-button {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: none;
-        }
-
-        .composer-component.completion-state .close { background: #FF5F56; }
-        .composer-component.completion-state .minimize { background: #FFBD2E; }
-        .composer-component.completion-state .maximize { background: #27C93F; }
 
         /* Mobile Responsive Styles */
         @media screen and (max-width: 768px) {
@@ -1298,14 +1221,12 @@
                                                     // Create new centered content
                                                     const content = document.createElement('div');
                                                     content.innerHTML = `
-                                                        <img src="cursorlogo.png" alt="Cursor Logo" class="cursor-logo">
                                                         <div class="completion-header">
                                                             <h2>SoftwareComposer.com</h2>
                                                             <p>DogSpace Created in 1 Prompt</p>
                                                         </div>
                                                         <div class="rectangle-container">
                                                             <iframe src="vertical-app.html" class="rectangle-vertical"></iframe>
-                                                            <iframe src="horizontal-app.html" class="rectangle-horizontal"></iframe>
                                                             <div class="animated-text">Learn to Create Any App With Just Text, Sign Up Below</div>
                                                         </div>
                                                     `;
@@ -1321,27 +1242,18 @@
                                                             const vertical = document.querySelector('.rectangle-vertical');
                                                             vertical.classList.add('slide-in');
                                                             
-                                                            // Then slide it up
+                                                            // Show animated text after vertical rectangle is loaded
                                                             setTimeout(() => {
-                                                                vertical.classList.add('slide-up');
+                                                                document.querySelector('.animated-text').classList.add('visible');
+                                                                // Add highlight effect to email form and dim background
+                                                                document.querySelector('.email-form').classList.add('highlight');
+                                                                document.querySelector('.email-input').classList.add('highlight');
                                                                 
-                                                                // Finally show horizontal rectangle
+                                                                // Add grow animation to email form when completion state is shown
                                                                 setTimeout(() => {
-                                                                    document.querySelector('.rectangle-horizontal').classList.add('visible');
-                                                                    // Add animation for text after rectangles are loaded
-                                                                    setTimeout(() => {
-                                                                        document.querySelector('.animated-text').classList.add('visible');
-                                                                        // Add highlight effect to email form and dim background
-                                                                        document.querySelector('.email-form').classList.add('highlight');
-                                                                        document.querySelector('.email-input').classList.add('highlight');
-                                                                        
-                                                                        // Add grow animation to email form when completion state is shown
-                                                                        setTimeout(() => {
-                                                                            document.querySelector('.email-form').classList.add('grow');
-                                                                        }, 400);
-                                                                    }, 800);
+                                                                    document.querySelector('.email-form').classList.add('grow');
                                                                 }, 400);
-                                                            }, 600);
+                                                            }, 800);
                                                         }, 400);
                                                     }, 1500);
                                                 }, 1500);

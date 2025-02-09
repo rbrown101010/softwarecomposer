@@ -6,6 +6,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "*.{png,jpg,jpeg,gif,webp}",
+      "use": "@vercel/static"
+    },
+    {
       "src": "public/**/*",
       "use": "@vercel/static"
     }
@@ -14,6 +18,10 @@
     {
       "src": "/images/(.*)",
       "dest": "/public/images/$1"
+    },
+    {
+      "src": "/(.*\\.(?:png|jpg|jpeg|gif|webp)$)",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
