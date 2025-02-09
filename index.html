@@ -717,10 +717,11 @@
             align-items: center;
             padding: 40px;
             text-align: center;
-            background: #2A2A2A;
+            background: #111111;
             border: 1px solid rgba(255, 255, 255, 0.8);
             border-radius: 16px;
             opacity: 1;
+            z-index: 100;
         }
 
         .composer-component.completion-state::after {
@@ -738,6 +739,7 @@
             border-radius: 16px;
             pointer-events: none;
             z-index: 1;
+            mix-blend-mode: screen;
         }
 
         .composer-component.completion-state.show-bg::after {
@@ -878,7 +880,7 @@
         }
 
         .dim-overlay.visible {
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.95);
         }
 
         /* Add step text styles */
