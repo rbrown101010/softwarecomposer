@@ -822,6 +822,19 @@
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             margin-top: 30px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .rectangle-horizontal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: #f0f0f0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .rectangle-vertical.slide-in {
@@ -935,6 +948,128 @@
 
         .composer-component.completion-state .cursor-logo:hover {
             opacity: 1;
+        }
+
+        .composer-component.completion-state .window-controls {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            z-index: 10;
+        }
+
+        .composer-component.completion-state .window-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        .composer-component.completion-state .close { background: #FF5F56; }
+        .composer-component.completion-state .minimize { background: #FFBD2E; }
+        .composer-component.completion-state .maximize { background: #27C93F; }
+
+        /* Mobile Responsive Styles */
+        @media screen and (max-width: 768px) {
+            .composer-component,
+            .composer-component.expanded,
+            .composer-component.completion-state,
+            .chat-bubbles,
+            .chart-container,
+            .post-hero-content,
+            .composer-logo,
+            .generated-files,
+            .code-container,
+            .composer-left,
+            .composer-right,
+            .step-text {
+                display: none !important;
+            }
+
+            .hero {
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .hero-wrapper {
+                height: 100vh;
+            }
+
+            .hero-spacer {
+                height: 100vh;
+            }
+
+            .hero-bg {
+                display: block !important;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+            }
+
+            .title {
+                font-size: 2.5rem;
+                padding-top: 40px;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .email-section {
+                position: fixed;
+                bottom: 40px;
+                padding: 0 20px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .email-form {
+                width: 100%;
+                max-width: none;
+                padding: 8px;
+                display: flex;
+                gap: 8px;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+            }
+
+            .email-input {
+                flex: 1;
+                min-width: 0;
+                font-size: 16px;
+                padding: 12px 16px;
+            }
+
+            .waitlist-button {
+                white-space: nowrap;
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+        }
+
+        /* Additional adjustments for very small screens */
+        @media screen and (max-width: 380px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .email-form {
+                padding: 6px;
+            }
+
+            .email-input,
+            .waitlist-button {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>

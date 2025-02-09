@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.{png,jpg,jpeg,gif,webp}",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dog images/*.{png,jpg,jpeg,gif,webp}",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/dog images/(.*)",
+      "dest": "/dog images/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+} 
