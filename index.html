@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Composers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+        }
+
+        .content-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            padding: 0 40px;
+            box-sizing: border-box;
+        }
+
+        /* Hero section wrapper to handle the fixed positioning */
+        .hero-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 40px;
+            box-sizing: border-box;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            padding: 40px;
+        }
+
+        /* Hero section */
+        .hero {
+            width: 100%;
+            max-width: 1200px;
+            height: 100vh;
+            background: #000;
+            margin: 0;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3360px;
+            background-image: url('bg.webp');
+            background-size: cover;
+            background-position: top center;
+            will-change: transform;
+        }
+
+        /* Remove the success state background switch */
+        .hero-bg.success {
+            background-image: url('bg.webp');
+        }
+
+        /* Add a spacer to prevent content jump when hero becomes fixed */
+        .hero-spacer {
+            height: 3360px; /* Match the full image height */
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Content wrapper to ensure proper z-index stacking */
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            pointer-events: none;
+            margin-top: -100vh; /* Pull content up to overlap with hero */
+        }
+
+        .email-section {
+            position: fixed;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 0 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 101;
+            pointer-events: all;
+            box-sizing: border-box;
+        }
+
+        .email-form {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+            border-radius: 30px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-input {
+            flex: 1;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            outline: none;
+            min-width: 200px;
+        }
+
+        .waitlist-button {
+            padding: 10px 16px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .waitlist-button:hover {
+            background: #333;
+        }
+
+        /* Update enter button styles */
+        .enter-button {
+            margin-top: 30px;
+            padding: 12px 35px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            letter-spacing: 1.5px;
+            text-transform: lowercase;
+        }
+
+        .enter-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Chart styles */
+        .chart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 200;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1f3f 100%);
+            transition: opacity 0.5s ease;
+        }
+
+        .chart-container.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .chart-title {
+            color: #fff;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .chart {
+            width: 90%;
+            max-width: 1000px;
+            height: 600px;
+            margin: 20px;
+        }
+
+        .line {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 8px rgba(173, 140, 255, 0.3));
+        }
+
+        .axis {
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 1;
+            stroke-dasharray: 4;
+        }
+
+        .axis-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9em;
+            fill: rgba(255, 255, 255, 0.5);
+        }
+
+        .axis-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            fill: #FF6AD5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(255, 106, 213, 0.3);
+        }
+
+        .point {
+            fill: #fff;
+            stroke: #AD8CFF;
+            stroke-width: 2;
+            filter: drop-shadow(0 0 10px rgba(173, 140, 255, 0.5));
+        }
+
+        .value-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.4em;
+            fill: #fff;
+            text-anchor: middle;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(173, 140, 255, 0.3);
+        }
+
+        .year-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2em;
+            fill: rgba(255, 255, 255, 0.7);
+            text-anchor: middle;
+        }
+
+        .grid-line {
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 1;
+        }
+
+        .connecting-line {
+            stroke: url(#gradient);
+            stroke-width: 2;
+            stroke-dasharray: 8;
+            opacity: 0;
+            filter: drop-shadow(0 0 5px rgba(173, 140, 255, 0.4));
+        }
+
+        /* Content after hero */
+        .post-hero-content {
+            position: relative;
+            z-index: 2;
+            padding-top: 40px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .post-hero-content.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            font-weight: 600;
+            margin-top: -0.5rem;
+        }
+
+        /* Remove the span animation styles */
+        .title span {
+            display: inline;
+        }
+
+        /* Chat Bubbles Styles */
+        .chat-bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .chat-bubbles.fixed-with-composer {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .chat-bubbles.absolute-with-composer {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .bubble {
+            position: absolute;
+            width: 400px;
+            height: 140px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            transition: all 0.6s ease-out;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            will-change: transform, opacity;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            color: #ffffff;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transform: rotate(-8deg);  /* Initial rotation for all bubbles */
+        }
+
+        /* Left bubbles tail */
+        .bubble-1::after,
+        .bubble-2::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -10px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid rgba(26, 26, 26, 0.95);
+            filter: drop-shadow(-2px 0 0 rgba(255, 255, 255, 0.8));
+        }
+
+        /* Right bubbles tail */
+        .bubble-3::after,
+        .bubble-4::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid rgba(26, 26, 26, 0.95);
+            filter: drop-shadow(2px 0 0 rgba(255, 255, 255, 0.8));
+        }
+
+        /* Alternate rotation for different bubbles */
+        .bubble-1 { 
+            transform: rotate(-8deg);
+            top: 25%;
+            left: 10%;
+        }
+        .bubble-2 { 
+            transform: rotate(5deg);
+            top: 40%;
+            left: 15%;
+        }
+        .bubble-3 { 
+            transform: rotate(-6deg);
+            top: 40%;
+            right: 10%;
+        }
+        .bubble-4 { 
+            transform: rotate(8deg);
+            top: 25%;
+            right: 15%;
+        }
+
+        .chat-bubbles.fixed {
+            position: fixed;
+            top: 0;
+        }
+
+        .chat-bubbles.hidden {
+            opacity: 0;
+            transition: opacity 0.6s ease-out;
+        }
+
+        /* Add composer component styles */
+        .composer-component {
+            position: fixed;
+            top: 75vh;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            background: #2A2A2A;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            opacity: 1;
+            z-index: 11;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .composer-component.expanded {
+            width: 1000px;
+            background: #1a1a1a;
+            height: auto;
+            min-height: 500px;
+        }
+
+        .composer-component.success {
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2);
+            animation: successPulse 1.5s ease-in-out;
+        }
+
+        @keyframes successPulse {
+            0% { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2); }
+            50% { border-color: rgba(255, 255, 255, 0.8); box-shadow: 0 8px 32px rgba(255, 255, 255, 0.3); }
+            100% { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2); }
+        }
+
+        .composer-left {
+            flex: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-right: 20px;
+            display: none;
+        }
+
+        .composer-component.expanded .composer-left {
+            flex: 1;
+            opacity: 1;
+            display: block;
+        }
+
+        .composer-right {
+            flex: 1;
+            position: relative;
+        }
+
+        .code-container {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            color: #e0e0e0;
+            margin-top: 20px;
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .code-container.visible {
+            opacity: 1;
+            height: auto;
+        }
+
+        .file-preview {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-preview.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .file-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            animation: shine 1.5s infinite;
+        }
+
+        @keyframes shine {
+            to {
+                left: 100%;
+            }
+        }
+
+        .file-name {
+            color: #AD8CFF;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-name::before {
+            content: '📄';
+            font-size: 1.2em;
+        }
+
+        .file-content {
+            color: #e0e0e0;
+            font-size: 0.85em;
+            line-height: 1.4;
+            max-height: 100px;
+            overflow: hidden;
+        }
+
+        .generated-files {
+            position: fixed;
+            top: 50%;
+            right: 40px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .generated-files.visible {
+            opacity: 1;
+        }
+
+        .file-icon {
+            width: 220px;
+            height: 42px;
+            background: rgba(26, 26, 26, 1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: rgba(255, 255, 255, 1);
+            font-size: 13px;
+            position: relative;
+            transform: translateX(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            padding-left: 12px;
+        }
+
+        .file-icon.visible {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .file-icon::after {
+            content: attr(data-text);
+        }
+
+        .composer-header {
+            color: #fff;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .composer-content {
+            min-height: 200px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1em;
+            white-space: pre-wrap;
+            margin-bottom: 40px;
+        }
+
+        .composer-logo {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 128px;
+            height: 128px;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .composer-logo:hover {
+            opacity: 1;
+        }
+
+        .typing-text {
+            border-right: 2px solid #ff4444;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: typing 2s steps(40, end) forwards;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        /* Add new loading bar styles */
+        .loading-container {
+            width: 100%;
+            height: 0;
+            opacity: 0;
+            transition: all 0.5s ease;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading-container.visible {
+            height: 60px;
+            opacity: 1;
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #61C3FF, #5A87FF, #61C3FF);
+            border-radius: 3px;
+            transition: width 1.5s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+        }
+
+        .loading-bar.animate::after {
+            width: 100%;
+        }
+
+        /* Update completion state styles */
+        .composer-component.completion-state {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 1000px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            background: #2A2A2A;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            opacity: 1;
+        }
+
+        .composer-component.completion-state > * {
+            position: relative;
+            z-index: 3;
+        }
+
+        .composer-component.completion-state::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('present.webp');
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.6s ease-in;
+            border-radius: 16px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .composer-component.completion-state.show-bg::after {
+            opacity: 0.7;
+        }
+
+        .composer-component.completion-state .composer-right {
+            display: none;
+        }
+
+        .composer-component.completion-state .composer-left {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .completion-header {
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+
+        .completion-header.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .completion-header h2 {
+            color: #fff;
+            font-size: 2em;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+
+        .completion-header p {
+            color: #fff;
+            font-size: 1.2em;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .rectangle-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .rectangle-vertical {
+            width: 200px;
+            height: 400px;
+            background: #fff;
+            border: 4px solid #000;
+            border-radius: 12px;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .rectangle-horizontal {
+            width: 550px;
+            height: 360px;
+            background: #fff;
+            border: 4px solid #000;
+            border-radius: 12px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .rectangle-vertical.slide-in {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .rectangle-vertical.slide-up {
+            transform: translateY(-20px);
+        }
+
+        .rectangle-horizontal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animated text styles */
+        .animated-text {
+            position: relative;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.8s ease;
+            text-align: center;
+            width: 100%;
+            margin-top: 40px;
+            transform: translateY(20px);
+        }
+
+        .animated-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Add file merging animation styles */
+        .file-preview.merging {
+            animation: mergeTogether 0.8s forwards;
+        }
+
+        @keyframes mergeTogether {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                transform: translateY(50%) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* Email highlight effect */
+        .email-form.highlight {
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            transition: all 0.6s ease;
+            transform: scale(1);
+        }
+
+        .email-form.highlight.grow {
+            transform: scale(1.25);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .email-input.highlight {
+            background: rgba(255, 255, 255, 0.95);
+            transition: all 0.6s ease;
+        }
+
+        /* Add dimming overlay styles */
+        .dim-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.8s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .dim-overlay.visible {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Add step text styles */
+        .step-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            font-weight: 500;
+            margin-left: auto;
+            transition: opacity 0.4s ease;
+        }
+
+        .step-text.hidden {
+            opacity: 0;
+        }
+
+        .composer-component.completion-state .cursor-logo {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 96px;
+            height: 96px;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+            z-index: 2;
+        }
+
+        .composer-component.completion-state .cursor-logo:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Add preloader -->
+    <link rel="preload" href="bg2.webp" as="image">
+
+    <!-- Add the bubbles container right after body opening -->
+    <div class="chat-bubbles">
+        <div class="bubble bubble-1">app idea</div>
+        <div class="bubble bubble-2">app idea</div>
+        <div class="bubble bubble-3">app idea</div>
+        <div class="bubble bubble-4">app idea</div>
+    </div>
+
+    <!-- Update composer component structure -->
+    <div class="composer-component">
+        <div class="composer-left">
+            <div class="code-container">
+                <div class="file-preview">
+                    <div class="file-name">App.js</div>
+                    <div class="file-content">
+                        import React from 'react';
+                        import { View, Text } from 'react-native';
+                        
+                        const DogSocialApp = () => {
+                          return (
+                            <View>
+                              <Text>Welcome to DogSpace!</Text>
+                            </View>
+                          );
+                        };
+                    </div>
+                </div>
+                <div class="file-preview">
+                    <div class="file-name">styles.css</div>
+                    <div class="file-content">
+                        .dog-feed {
+                          display: flex;
+                          flex-direction: column;
+                          gap: 20px;
+                          padding: 20px;
+                        }
+                    </div>
+                </div>
+                <div class="file-preview">
+                    <div class="file-name">package.json</div>
+                    <div class="file-content">
+                        {
+                          "name": "dogbook",
+                          "version": "1.0.0",
+                          "dependencies": {
+                            "react": "^18.2.0",
+                            "react-native": "^0.72.0"
+                          }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="composer-right">
+            <div class="composer-header">
+                Composer
+                <div class="step-text">Step One: Speak your idea</div>
+            </div>
+            <div class="composer-content"></div>
+            <img src="cursorlogo.png" alt="Cursor Logo" class="composer-logo">
+        </div>
+        <div class="generated-files">
+            <div class="file-icon" data-text="Generating Code"></div>
+            <div class="file-icon" data-text="Creating Dog Social Media App"></div>
+            <div class="file-icon" data-text="Running Locally"></div>
+        </div>
+    </div>
+
+    <div class="hero-wrapper">
+        <div class="hero">
+            <div class="hero-bg"></div>
+            <div class="container">
+                <h1 class="title">Want to build an app?</h1>
+                <p class="subtitle">Forget the code, just vibe.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Add spacer to maintain scroll height -->
+    <div class="hero-spacer"></div>
+    
+    <!-- Email section that will be fixed until scrolled past hero -->
+    <div class="email-section">
+        <form class="email-form">
+            <input type="email" class="email-input" placeholder="Enter your email">
+            <button type="submit" class="waitlist-button">Join the waitlist</button>
+        </form>
+    </div>
+
+    <!-- Content after hero -->
+    <div class="post-hero-content">
+        <div class="content-container">
+            <div class="email-section static">
+                <form class="email-form">
+                    <input type="email" class="email-input" placeholder="Enter your email">
+                    <button type="submit" class="waitlist-button">Join the waitlist</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <h2 class="chart-title">THE NUMBER OF PROGRAMMERS WILL SKY ROCKET</h2>
+        <svg class="chart" viewBox="0 0 1000 600">
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#FF6AD5"/>
+                    <stop offset="50%" style="stop-color:#C774E8"/>
+                    <stop offset="100%" style="stop-color:#AD8CFF"/>
+                </linearGradient>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <!-- Grid lines -->
+            <line class="grid-line" x1="180" y1="100" x2="850" y2="100" />
+            <line class="grid-line" x1="180" y1="200" x2="850" y2="200" />
+            <line class="grid-line" x1="180" y1="300" x2="850" y2="300" />
+            <line class="grid-line" x1="180" y1="400" x2="850" y2="400" />
+            
+            <!-- Axes -->
+            <line class="axis" x1="180" y1="400" x2="850" y2="400" />
+            <line class="axis" x1="180" y1="100" x2="180" y2="400" />
+            
+            <!-- Axis titles -->
+            <text class="axis-title" x="500" y="480" text-anchor="middle">YEAR</text>
+            <text class="axis-title" x="80" y="300" text-anchor="middle" transform="rotate(90 80 300)">PROGRAMMERS</text>
+            
+            <!-- Axis labels -->
+            <text class="axis-label" x="170" y="400" text-anchor="end">25M</text>
+            <text class="axis-label" x="170" y="300" text-anchor="end">50M</text>
+            <text class="axis-label" x="170" y="200" text-anchor="end">75M</text>
+            <text class="axis-label" x="170" y="100" text-anchor="end">100M</text>
+            
+            <!-- Main line and points -->
+            <path class="line" d="M280,320 C400,320 500,200 800,100" opacity="0" />
+            <circle class="point point-2025" cx="280" cy="320" r="8" />
+            <circle class="point point-2030" cx="800" cy="100" r="8" />
+            <text class="value-label" x="280" y="300">26.9M</text>
+            <text class="value-label" x="800" y="80">100M</text>
+            <text class="year-label" x="280" y="440">2025</text>
+            <text class="year-label" x="800" y="440">2030</text>
+        </svg>
+    </div>
+
+    <!-- Add dimming overlay -->
+    <div class="dim-overlay"></div>
+
+    <script>
+        const typewriterText = "Create an app that is the social media for dogs.";
+        let hasStartedTyping = false;
+        let hasFinishedTyping = false;
+        let hasStartedCodeGen = false;
+
+        function startCodeGeneration() {
+            const composer = document.querySelector('.composer-component');
+            const codeContainer = document.querySelector('.code-container');
+            const filePreviews = document.querySelectorAll('.file-preview');
+            const generatedFiles = document.querySelector('.generated-files');
+            const fileIcons = document.querySelectorAll('.file-icon');
+            const heroBg = document.querySelector('.hero-bg');
+
+            // Expand the composer
+            composer.classList.add('expanded');
+
+            // Show code container after expansion
+            setTimeout(() => {
+                codeContainer.classList.add('visible');
+                
+                // Animate file previews one by one
+                filePreviews.forEach((preview, index) => {
+                    setTimeout(() => {
+                        preview.classList.add('visible');
+                        // Add success state after last file preview is shown
+                        if (index === filePreviews.length - 1) {
+                            setTimeout(() => {
+                                composer.classList.add('success');
+                                heroBg.classList.add('success');
+                                
+                                // Start file merging animation after success state
+                                setTimeout(() => {
+                                    filePreviews.forEach(preview => {
+                                        preview.classList.add('merging');
+                                    });
+
+                                    setTimeout(() => {
+                                        let loadingContainer = document.querySelector('.loading-container');
+                                        if (!loadingContainer) {
+                                            loadingContainer = document.createElement('div');
+                                            loadingContainer.className = 'loading-container';
+                                            loadingContainer.innerHTML = `
+                                                <div class="loading-text">Generating your app...</div>
+                                                <div class="loading-bar"></div>
+                                            `;
+                                            codeContainer.appendChild(loadingContainer);
+                                        }
+
+                                        setTimeout(() => {
+                                            loadingContainer.classList.add('visible');
+                                            setTimeout(() => {
+                                                const loadingBar = loadingContainer.querySelector('.loading-bar');
+                                                loadingBar.classList.add('animate');
+                                                
+                                                // After loading completes, transform into completion state
+                                                setTimeout(() => {
+                                                    // Clear the entire composer content
+                                                    composer.innerHTML = '';
+                                                    composer.classList.add('completion-state');
+                                                    document.querySelector('.dim-overlay').classList.add('visible');
+                                                    
+                                                    // Add background after dimming
+                                                    setTimeout(() => {
+                                                        composer.classList.add('show-bg');
+                                                    }, 800);
+                                                    
+                                                    // Create new centered content
+                                                    const content = document.createElement('div');
+                                                    content.innerHTML = `
+                                                        <img src="cursorlogo.png" alt="Cursor Logo" class="cursor-logo">
+                                                        <div class="completion-header">
+                                                            <h2>SoftwareComposer.com</h2>
+                                                            <p>DogSpace Created in 1 Prompt</p>
+                                                        </div>
+                                                        <div class="rectangle-container">
+                                                            <iframe src="vertical-app.html" class="rectangle-vertical"></iframe>
+                                                            <iframe src="horizontal-app.html" class="rectangle-horizontal"></iframe>
+                                                            <div class="animated-text">Learn to Create Any App With Just Text, Sign Up Below</div>
+                                                        </div>
+                                                    `;
+                                                    
+                                                    composer.appendChild(content);
+                                                    
+                                                    // Animate elements
+                                                    setTimeout(() => {
+                                                        document.querySelector('.completion-header').classList.add('visible');
+                                                        
+                                                        // First slide in vertical rectangle
+                                                        setTimeout(() => {
+                                                            const vertical = document.querySelector('.rectangle-vertical');
+                                                            vertical.classList.add('slide-in');
+                                                            
+                                                            // Then slide it up
+                                                            setTimeout(() => {
+                                                                vertical.classList.add('slide-up');
+                                                                
+                                                                // Finally show horizontal rectangle
+                                                                setTimeout(() => {
+                                                                    document.querySelector('.rectangle-horizontal').classList.add('visible');
+                                                                    // Add animation for text after rectangles are loaded
+                                                                    setTimeout(() => {
+                                                                        document.querySelector('.animated-text').classList.add('visible');
+                                                                        // Add highlight effect to email form and dim background
+                                                                        document.querySelector('.email-form').classList.add('highlight');
+                                                                        document.querySelector('.email-input').classList.add('highlight');
+                                                                        
+                                                                        // Add grow animation to email form when completion state is shown
+                                                                        setTimeout(() => {
+                                                                            document.querySelector('.email-form').classList.add('grow');
+                                                                        }, 400);
+                                                                    }, 800);
+                                                                }, 400);
+                                                            }, 600);
+                                                        }, 400);
+                                                    }, 1500);
+                                                }, 1500);
+                                            }, 100);
+                                        }, 100);
+                                    }, 800);
+                                }, 1000);
+                            }, 400);
+                        }
+                    }, index * 400);
+                });
+
+                // Show generated files container
+                setTimeout(() => {
+                    generatedFiles.classList.add('visible');
+                    
+                    // Animate file icons one by one
+                    fileIcons.forEach((icon, index) => {
+                        setTimeout(() => {
+                            icon.classList.add('visible');
+                        }, index * 200);
+                    });
+                }, filePreviews.length * 400 + 200);
+            }, 600);
+        }
+
+        // Add scroll behavior
+        document.addEventListener('scroll', () => {
+            const heroWrapper = document.querySelector('.hero-wrapper');
+            const heroSpacer = document.querySelector('.hero-spacer');
+            const heroBg = document.querySelector('.hero-bg');
+            const heroRect = heroSpacer.getBoundingClientRect();
+            const scrollProgress = window.scrollY;
+            const emailSection = document.querySelector('.email-section');
+            const postHeroContent = document.querySelector('.post-hero-content');
+            const container = document.querySelector('.container');
+            const composerComponent = document.querySelector('.composer-component');
+            const composerContent = document.querySelector('.composer-content');
+            
+            // Animate bubbles based on scroll
+            const bubbles = document.querySelectorAll('.bubble');
+            const bubblesContainer = document.querySelector('.chat-bubbles');
+            const maxScroll = (heroSpacer.offsetHeight - window.innerHeight) * 0.15; // Only need 15% of the scroll
+            const scrollPercentage = Math.min(scrollProgress / maxScroll, 1);
+            
+            // Handle typing animation
+            if (scrollPercentage > 0.8 && !hasStartedTyping) {
+                hasStartedTyping = true;
+                composerContent.innerHTML = `<div class="typing-text">${typewriterText}</div>`;
+                // Hide the step text when typing starts
+                document.querySelector('.step-text').classList.add('hidden');
+                
+                // Start code generation after typing finishes
+                setTimeout(() => {
+                    if (!hasStartedCodeGen) {
+                        hasStartedCodeGen = true;
+                        startCodeGeneration();
+                    }
+                }, 2000);
+            } else if (scrollPercentage <= 0.5) {
+                hasStartedTyping = false;
+                hasStartedCodeGen = false;
+                composerContent.innerHTML = '';
+                const composer = document.querySelector('.composer-component');
+                const heroBg = document.querySelector('.hero-bg');
+                composer.classList.remove('expanded', 'success');
+                heroBg.classList.remove('success');
+                // Show the step text again when scrolling back up
+                document.querySelector('.step-text').classList.remove('hidden');
+                document.querySelector('.code-container')?.classList.remove('visible');
+                document.querySelector('.generated-files')?.classList.remove('visible');
+                document.querySelectorAll('.file-preview').forEach(preview => preview.classList.remove('visible'));
+                document.querySelectorAll('.file-icon').forEach(icon => icon.classList.remove('visible'));
+            }
+
+            // Define convergence threshold
+            const convergencePoint = 0.7; // Start converging at 70% of scroll
+            const fullyConvergedPoint = 0.85; // Fully converged by 85% of scroll
+            
+            // Calculate convergence progress
+            let convergenceProgress = 0;
+            if (scrollPercentage <= convergencePoint) {
+                convergenceProgress = scrollPercentage / convergencePoint;
+            } else if (scrollPercentage <= fullyConvergedPoint) {
+                // Accelerate convergence between convergencePoint and fullyConvergedPoint
+                convergenceProgress = 1 + (scrollPercentage - convergencePoint) / (fullyConvergedPoint - convergencePoint);
+            } else {
+                convergenceProgress = 2; // Fully converged
+            }
+
+            // Activate composer when bubbles start final convergence
+            if (scrollPercentage >= convergencePoint) {
+                composerComponent.classList.add('active');
+            } else {
+                composerComponent.classList.remove('active');
+            }
+
+            // Determine if we should show the bubbles
+            if (scrollProgress > maxScroll * 2) {
+                bubblesContainer.classList.add('hidden');
+            } else {
+                bubblesContainer.classList.remove('hidden');
+            }
+
+            bubbles.forEach((bubble, index) => {
+                // Get the composer's position
+                const composerRect = composerComponent.getBoundingClientRect();
+                const targetX = composerRect.left + (composerRect.width / 2);
+                const targetY = composerRect.top + (composerRect.height / 2);
+                
+                // Get the bubble's current position
+                const rect = bubble.getBoundingClientRect();
+                const currentX = rect.left;
+                const currentY = rect.top;
+                
+                // Calculate distance to composer center
+                const distanceX = targetX - currentX - (bubble.offsetWidth / 2);
+                const distanceY = targetY - currentY - (bubble.offsetHeight / 2);
+                
+                // Use custom easing for smoother convergence
+                const easeOutBack = t => {
+                    const c1 = 1.70158;
+                    const c3 = c1 + 1;
+                    return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+                };
+
+                // Apply easing to convergence progress
+                let easedProgress;
+                if (convergenceProgress <= 1) {
+                    // Normal movement phase
+                    easedProgress = easeOutBack(convergenceProgress);
+                } else {
+                    // Final convergence phase
+                    const finalProgress = (convergenceProgress - 1);
+                    easedProgress = 1 + finalProgress; // Linear final approach
+                }
+                
+                const moveX = distanceX * easedProgress;
+                const moveY = distanceY * easedProgress;
+                
+                // Get initial rotation based on bubble class
+                let initialRotation = 0;
+                if (bubble.classList.contains('bubble-1')) initialRotation = -8;
+                else if (bubble.classList.contains('bubble-2')) initialRotation = 5;
+                else if (bubble.classList.contains('bubble-3')) initialRotation = -6;
+                else if (bubble.classList.contains('bubble-4')) initialRotation = 8;
+                
+                // Calculate rotation based on progress
+                const rotation = initialRotation * (1 - easedProgress);
+                
+                bubble.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotation}deg)`;
+
+                // Add slight scale down as bubbles converge
+                if (convergenceProgress > 1) {
+                    const scale = Math.max(0.8, 1 - (convergenceProgress - 1));
+                    bubble.style.transform += ` scale(${scale})`;
+                }
+            });
+
+            // Move the background image up as we scroll
+            if (heroRect.bottom > 0) {
+                const translateY = Math.min(heroBg.offsetHeight - heroWrapper.offsetHeight, scrollProgress);
+                heroBg.style.transform = `translateY(-${translateY}px)`;
+                container.style.transform = `translateY(-${scrollProgress}px)`;
+                emailSection.style.position = 'fixed';
+                emailSection.style.bottom = '40px';
+                postHeroContent.classList.remove('visible');
+            }
+            
+            if (heroRect.bottom <= 0) {
+                // When we've scrolled past the spacer
+                heroWrapper.style.position = 'absolute';
+                heroWrapper.style.top = `${heroSpacer.offsetTop}px`;
+                emailSection.style.position = 'absolute';
+                emailSection.style.bottom = 'auto';
+                postHeroContent.classList.add('visible');
+            } else {
+                // Reset to fixed when scrolling back up
+                heroWrapper.style.position = 'fixed';
+                heroWrapper.style.top = '0';
+            }
+        });
+
+        const composerAnimation = anime.timeline({
+            easing: 'easeOutExpo',
+            duration: 750
+        });
+
+        composerAnimation
+        .add({
+            targets: '.composer-logo',
+            scale: 1,
+            duration: 800,
+            easing: 'easeOutElastic(1, .5)'
+        });
+    </script>
+</body>
+</html> 

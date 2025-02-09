@@ -1,0 +1,10 @@
+.app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Ensure Instagram feed appears on top of everything */
+.instagram-feed {
+  z-index: 9999;
+} 

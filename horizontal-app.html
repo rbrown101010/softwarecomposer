@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .app-container {
+            width: 100%;
+            height: 100%;
+            background: #FAFAFA;
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            position: relative;
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid #DBDBDB;
+            padding: 20px;
+        }
+
+        .main-content {
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .feed {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+
+        .post {
+            background: white;
+            margin-bottom: 24px;
+        }
+
+        .post-image {
+            aspect-ratio: 1;
+            width: 100%;
+            margin: 8px 0;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-header {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .username {
+            font-weight: 600;
+            color: #262626;
+            font-size: 14px;
+        }
+
+        .post-caption {
+            padding: 0 16px 16px;
+            color: #262626;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .post-caption .username {
+            margin-right: 6px;
+        }
+
+        .nav-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #262626;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item:hover {
+            background: #F5F5F5;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            width: 24px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            padding: 12px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        .window-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+        }
+
+        .close { background: #FF5F56; }
+        .minimize { background: #FFBD2E; }
+        .maximize { background: #27C93F; }
+
+        /* Custom scrollbar for main content */
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: #FAFAFA;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: #C7C7C7;
+            border-radius: 4px;
+        }
+
+        .main-content::-webkit-scrollbar-thumb:hover {
+            background: #A8A8A8;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="window-controls">
+            <div class="window-button close"></div>
+            <div class="window-button minimize"></div>
+            <div class="window-button maximize"></div>
+        </div>
+        <div class="sidebar">
+            <div class="logo">DogSpace</div>
+            <div class="nav-item">
+                <i class="fas fa-house"></i>
+                Home
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-search"></i>
+                Search
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-compass"></i>
+                Explore
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-paper-plane"></i>
+                Messages
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-user"></i>
+                Profile
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="feed">
+                <div class="post">
+                    <div class="post-header">
+                        <span class="username">pawsome_pup</span>
+                    </div>
+                    <div class="post-image">
+                        <img src="dog images/1.png" alt="Dog 1">
+                    </div>
+                    <div class="post-caption">
+                        <span class="username">pawsome_pup</span>
+                        <span>Living my best treat life! 🦴</span>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <span class="username">sir_barks_alot</span>
+                    </div>
+                    <div class="post-image">
+                        <img src="dog images/2.png" alt="Dog 2">
+                    </div>
+                    <div class="post-caption">
+                        <span class="username">sir_barks_alot</span>
+                        <span>Caught the mailman again! 📫</span>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <span class="username">woofgang_mozart</span>
+                    </div>
+                    <div class="post-image">
+                        <img src="dog images/3.png" alt="Dog 3">
+                    </div>
+                    <div class="post-caption">
+                        <span class="username">woofgang_mozart</span>
+                        <span>Just chasing my dreams 🎾</span>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <span class="username">furry_tail_swift</span>
+                    </div>
+                    <div class="post-image">
+                        <img src="dog images/4.png" alt="Dog 4">
+                    </div>
+                    <div class="post-caption">
+                        <span class="username">furry_tail_swift</span>
+                        <span>Squad walks are the best! 🐾</span>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <span class="username">bark_twain</span>
+                    </div>
+                    <div class="post-image">
+                        <img src="dog images/5.png" alt="Dog 5">
+                    </div>
+                    <div class="post-caption">
+                        <span class="username">bark_twain</span>
+                        <span>Weekend vibes with my humans 🌞</span>
+                    </div>
+                </div>
+                <div class="post">
+                    <div class="post-header">
+                        <span class="username">snoop_doggy</span>
+                    </div>
+                    <div class="post-image">
+                        <img src="dog images/6.png" alt="Dog 6">
+                    </div>
+                    <div class="post-caption">
+                        <span class="username">snoop_doggy</span>
+                        <span>Nap time is my favorite time 😴</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
